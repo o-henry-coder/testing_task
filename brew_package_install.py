@@ -33,11 +33,18 @@ def check_return_code(package_name) :
     return ret_code
 
 
+def check_invalid_package_name(package):
+    subprocess.run([path, command, package])
+    inv_symbols = '!# $%^&*()+='
+    a = [True for i in package if i in inv_symbols]
+    return a
+
+
 def not_existing_package(package) :
     result = subprocess.Popen([path, command, package], stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     err = result.communicate()
-    a = 'No similarly named formulae found'.encode()
+    a = 'No available formula or cask with the name'.encode()
     if a in err[1] :
         raise NotExistingPackage("No formulae found")
 
@@ -81,4 +88,3 @@ def invalid_command(command, package) :
     a = 'Unknown command'.encode()
     if a in err[1] :
         raise InvalidCommandUsing("Invalid command")
-
